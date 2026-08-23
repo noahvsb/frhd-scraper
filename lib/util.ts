@@ -2,20 +2,45 @@ export function checkResponse(res: Response): void {
   if (!res.ok) throw new Error(`${res.status}: ${res.statusText}`);
 }
 
+export type IdsOption = 'cc' | 'all' | SliceIds;
+
+export type SliceIds = {
+  start: number,
+  end: number,
+};
+
 export type Options = {
-  log: boolean,
   compress: boolean,
   path: string,
-}
+  progressBar: boolean,
+  ids: IdsOption,
+};
 
 export const createOptions = ({
-  log = false,
   compress = true,
   path = 'data',
+  progressBar = true,
+  ids = 'cc',
 }: Partial<Options> = {}): Options => ({
-  log,
   compress,
   path,
+  progressBar,
+  ids,
 });
 
 export const defaultOptions = createOptions();
+
+export function rangeArray(start: number, end: number) {
+  const arr = [];
+  for (let i = start; i <= end; i++) arr.push(i);
+  return arr;
+}
+
+export function getIds(idsOption: IdsOption): number[] {
+  const ccIds = rangeArray(1001, 11106);
+  const allIds = [...ccIds, ...rangeArray(50001, 1100000)];
+
+  if (idsOption === 'cc') return ccIds;
+  if (idsOption === 'all') return allIds;
+  return rangeArray(idsOption.start, idsOption.end);
+}

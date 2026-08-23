@@ -39,8 +39,6 @@ export async function fetchTrack(id: number, options: Options=defaultOptions): P
   let maybeCompressed = data.code;
   if (options.compress) {
     maybeCompressed = compressCode(maybeCompressed);
-    if (options.log) console.log('[LOG] original code size:', Math.ceil(data.code.length / 1000), 'kB');
-    if (options.log) console.log('[LOG] compressed code size:', Math.ceil(maybeCompressed.length / 1000), 'kB');
   }
 
   return {
@@ -58,8 +56,6 @@ export async function fetchTrack(id: number, options: Options=defaultOptions): P
 export async function writeTrackData(data: TrackData, options: Options=defaultOptions): Promise<void> {
   await mkdir(options.path, { recursive: true });
   await writeFile(`${options.path}/${data.id}.json`, JSON.stringify(data));
-
-  if (options.log) console.log('[LOG] written', data.id, '-', data.title);
 }
 
 export function compressCode(code: string) {

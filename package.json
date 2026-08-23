@@ -24,10 +24,14 @@
     "scrape:leaderboard": "echo \"TODO\" && exit 1"
   },
   "devDependencies": {
+    "@types/cli-progress": "^3.11.6",
     "@types/node": "^26.2.0",
     "jest": "^30.4.2",
     "ts-jest": "^29.4.12",
     "tsx": "^4.23.12",
     "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "cli-progress": "^3.12.0"
   }
 }

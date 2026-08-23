@@ -7,7 +7,9 @@
       "@/*": ["./lib/*"]
     },
     "strict": true,
-    "types": ["node"]
+    "types": ["node"],
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
   },
-  "include": ["**/*.ts"]
+  "include": ["**/*.ts"],
 }

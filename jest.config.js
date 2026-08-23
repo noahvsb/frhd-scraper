@@ -16,10 +16,10 @@ export default {
   coverageThreshold: {
     // TODO: set all to 100%
     global: {
-      lines: 0,
-      branches: 0,
+      lines: 100,
+      branches: 100,
       functions: 100,
-      statements: 0,
+      statements: 100,
     },
   },
 };

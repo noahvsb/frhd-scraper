@@ -1,4 +1,4 @@
-import { checkResponse } from '@/util';
+import { checkResponse, getIds, rangeArray } from '@/util';
 import { describe, expect, it } from '@jest/globals';
 
 describe('utils', () => {
@@ -18,4 +18,16 @@ describe('utils', () => {
       expect(() => checkResponse(unsuccessfulResponse)).toThrow('404: not found');
     });
   });
+
+  describe('getIds', () => {
+    it('community classics', () => {
+      expect(getIds('cc')).toEqual(rangeArray(1001, 11106));
+    });
+    it('all', () => {
+      expect(getIds('all')).toEqual([...rangeArray(1001, 11106), ...rangeArray(50001, 1100000)]);
+    });
+    it('slice', () => {
+      expect(getIds({ start: 4, end: 8 })).toEqual(rangeArray(4, 8));
+    });
+  })
 });
