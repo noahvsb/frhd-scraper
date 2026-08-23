@@ -7,7 +7,7 @@ describe('track utils', () => {
   describe('getCdnUrl', () => {
     it('fetches the cdn URL of Wild West', async () => {
       await expect(getCdnUrl(1001)).resolves.toEqual('https://cdn.freeriderhd.com/free_rider_hd/tracks/prd/b/8c/1001/track-data-v1.js');
-    });
+    }, 10000);
   });
 
   describe('fetchTrack', () => {
@@ -22,7 +22,7 @@ describe('track utils', () => {
         code: expect.any(String),
         compressed: expect.any(Boolean),
       })
-    });
+    }, 10000);
   });
 
   describe('writeTrackData', () => {

@@ -1,7 +1,5 @@
 export function checkResponse(res: Response): void {
-  if (!res.ok) {
-    throw new Error(`${res.status}: ${res.statusText}`);
-  }
+  if (!res.ok) throw new Error(`${res.status}: ${res.statusText}`);
 }
 
 export type Options = {

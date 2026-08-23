@@ -12,4 +12,14 @@ export default {
   transform: {
     ...tsJestTransformCfg,
   },
+  collectCoverage: true,
+  coverageThreshold: {
+    // TODO: set all to 100%
+    global: {
+      lines: 0,
+      branches: 0,
+      functions: 100,
+      statements: 0,
+    },
+  },
 };
