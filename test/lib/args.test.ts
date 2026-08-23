@@ -1,9 +1,4 @@
 import { describe, expect, it, mock } from 'bun:test';
-import mockYargs from './mocks/yargs';
-
-mock.module('yargs', () => ({ default: mockYargs }));
-mock.module('yargs/helpers', () => ({ hideBin: (argv: string[]) => argv.slice(2) }));
-
 import { processArguments } from '@/args';
 
 describe('args', () => {

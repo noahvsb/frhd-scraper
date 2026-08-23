@@ -1,7 +1,7 @@
 import { afterAll, beforeEach, describe, expect, it, spyOn, type Mock } from 'bun:test';
 import { compressCode, decompressCode, fetchTrack, getCdnUrl, TrackData, writeTrackData } from '@/track/util';
 import { readFile, rm } from 'node:fs/promises';
-import { createOptions } from '../test-utils';
+import { createOptions } from '../../test-utils';
 
 describe('track utils', () => {
   const mockCdnUrl = 'https://cdn.freeriderhd.com/free_rider_hd/tracks/prd/b/8c/1001/track-data-v1.js';

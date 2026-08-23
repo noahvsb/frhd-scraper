@@ -1,8 +1,8 @@
-import { describe, expect, it, beforeEach, afterEach, spyOn, type Mock } from 'bun:test';
-import { scrapeTracks } from '@/track/scraper';
+import { describe, expect, it, beforeEach, afterEach, spyOn, type Mock, mock } from 'bun:test';
 import { rangeArray } from '@/util';
 import { readFile, rm } from 'node:fs/promises';
-import { createOptions } from '../test-utils';
+import { createOptions } from '../../test-utils';
+import { scrapeTracks } from '@/track/scraper';
 
 describe('scrapeTracks', () => {
   const mockCdnUrl = (id: number) => `https://cdn.example.com/track/${id}.js`;
