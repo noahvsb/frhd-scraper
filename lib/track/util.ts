@@ -54,7 +54,6 @@ export async function fetchTrack(id: number, options: Options): Promise<TrackDat
 }
 
 export async function writeTrackData(data: TrackData, options: Options): Promise<void> {
-  await mkdir(options.path, { recursive: true });
   await writeFile(`${options.path}/${data.id}.json`, JSON.stringify(data));
 }
 

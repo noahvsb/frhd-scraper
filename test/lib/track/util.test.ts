@@ -1,6 +1,6 @@
 import { afterAll, beforeEach, describe, expect, it, spyOn, type Mock } from 'bun:test';
 import { compressCode, decompressCode, fetchTrack, getCdnUrl, TrackData, writeTrackData } from '@/track/util';
-import { readFile, rm } from 'node:fs/promises';
+import { mkdir, readFile, rm } from 'node:fs/promises';
 import { createOptions } from '../../test-utils';
 
 describe('track utils', () => {
@@ -72,7 +72,7 @@ describe('track utils', () => {
     });
 
     it('success without compression', async () => {
-      await expect(fetchTrack(1001, createOptions({ compress: false }))).resolves.toEqual({
+      expect(fetchTrack(1001, createOptions({ compress: false }))).resolves.toEqual({
         id: 1001,
         title: 'Wild West',
         desc: expect.any(String),
@@ -98,13 +98,17 @@ describe('track utils', () => {
     };
 
     it('writes mock track data', async () => {
-      await writeTrackData(mockTrackData, createOptions());
+      const options = createOptions({ path: 'test/data' });
 
-      const written = await readFile('data/1.json', 'utf-8');
+      await mkdir(options.path, { recursive: true });
+
+      await writeTrackData(mockTrackData, options);
+
+      const written = await readFile(`${options.path}/1.json`, 'utf-8');
       expect(JSON.parse(written)).toEqual(mockTrackData);
 
       // clean up
-      await rm('data', { recursive: true });
+      await rm(options.path, { recursive: true });
     });
   });
 
