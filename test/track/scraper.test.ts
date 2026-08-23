@@ -1,4 +1,4 @@
-import { describe, expect, it, jest, beforeEach, afterEach } from '@jest/globals';
+import { describe, expect, it, beforeEach, afterEach, spyOn, type Mock } from 'bun:test';
 import { scrapeTracks } from '@/track/scraper';
 import { rangeArray } from '@/util';
 import { readFile, rm } from 'node:fs/promises';
@@ -27,14 +27,14 @@ describe('scrapeTracks', () => {
     } as unknown as Response;
   }
 
-  let fetchSpy: jest.SpiedFunction<typeof fetch>;
-  let consoleErrorSpy: jest.SpiedFunction<typeof console.error>;
+  let fetchSpy: Mock<typeof fetch>;
+  let consoleErrorSpy: Mock<typeof console.error>;
   let failingIds: Set<number>;
 
   beforeEach(() => {
     failingIds = new Set();
 
-    fetchSpy = jest.spyOn(global, 'fetch').mockImplementation(async (input) => {
+    fetchSpy = spyOn(global, 'fetch').mockImplementation(<typeof fetch> (async (input) => {
       const url = input.toString();
 
       const trackMatch = url.match(/\/t\/(\d+)\?ajax=true/);
@@ -53,9 +53,9 @@ describe('scrapeTracks', () => {
       }
 
       throw new Error(`Unmocked fetch call: ${url}`);
-    });
+    }));
 
-    consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    consoleErrorSpy = spyOn(console, 'error').mockImplementation(() => {});
   });
 
   afterEach(async () => {

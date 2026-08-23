@@ -1,7 +1,7 @@
-import { jest } from '@jest/globals';
+import { mock } from 'bun:test';
 import parser from 'yargs-parser';
 
-export default jest.fn((argv: string[]) => {
+export default mock((argv: string[]) => {
   const boolean: string[] = [];
   const alias: Record<string, string> = {};
   const defaults: Record<string, unknown> = {};

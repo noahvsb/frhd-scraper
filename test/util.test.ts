@@ -1,5 +1,5 @@
 import { checkResponse, getIds, rangeArray } from '@/util';
-import { describe, expect, it } from '@jest/globals';
+import { describe, expect, it } from 'bun:test';
 
 describe('utils', () => {
   describe('checkResponse', () => {

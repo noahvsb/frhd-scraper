@@ -1,4 +1,4 @@
-import { afterAll, beforeEach, describe, expect, it, jest } from '@jest/globals';
+import { afterAll, beforeEach, describe, expect, it, spyOn, type Mock } from 'bun:test';
 import { compressCode, decompressCode, fetchTrack, getCdnUrl, TrackData, writeTrackData } from '@/track/util';
 import { readFile, rm } from 'node:fs/promises';
 import { createOptions } from '../test-utils';
@@ -25,10 +25,10 @@ describe('track utils', () => {
     } as unknown as Response;
   }
 
-  let fetchSpy: jest.SpiedFunction<typeof fetch>;
+  let fetchSpy: Mock<typeof fetch>;
 
   beforeEach(() => {
-    fetchSpy = jest.spyOn(global, 'fetch').mockImplementation(async (input) => {
+    fetchSpy = spyOn(global, 'fetch').mockImplementation(<typeof fetch> (async (input) => {
       const url = input.toString();
 
       if (url.startsWith('https://www.freeriderhd.com/t/')) {
@@ -40,7 +40,7 @@ describe('track utils', () => {
       }
 
       throw new Error(`Unmocked fetch call: ${url}`);
-    });
+    }));
   });
 
   afterAll(() => {
