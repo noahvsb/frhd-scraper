@@ -1,7 +1,7 @@
 import { afterAll, beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { compressCode, decompressCode, fetchTrack, getCdnUrl, TrackData, writeTrackData } from '@/track/util';
 import { readFile, rm } from 'node:fs/promises';
-import { createOptions } from '@/util';
+import { createOptions } from '../test-utils';
 
 describe('track utils', () => {
   const mockCdnUrl = 'https://cdn.freeriderhd.com/free_rider_hd/tracks/prd/b/8c/1001/track-data-v1.js';
@@ -55,7 +55,7 @@ describe('track utils', () => {
 
   describe('fetchTrack', () => {
     it('success', async () => {
-      await expect(fetchTrack(1001)).resolves.toEqual({
+      await expect(fetchTrack(1001, createOptions())).resolves.toEqual({
         id: 1001,
         title: 'Wild West',
         desc: expect.any(String),
@@ -94,7 +94,7 @@ describe('track utils', () => {
     };
 
     it('writes mock track data', async () => {
-      await writeTrackData(mockTrackData);
+      await writeTrackData(mockTrackData, createOptions());
 
       const written = await readFile('data/1.json', 'utf-8');
       expect(JSON.parse(written)).toEqual(mockTrackData);

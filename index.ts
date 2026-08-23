@@ -1,11 +1,8 @@
-import { scrapeTracks } from "@/track/scraper";
-import { createOptions, SliceIds } from "@/util";
+import { processArguments } from '@/args';
+import { scrapeTracks } from '@/track/scraper';
 
-const ids: SliceIds = {
-  start: 1001,
-  end: 1010,
+const { command, options } = processArguments();
+
+if (command === 'track') {
+  await scrapeTracks(options);
 }
-
-const options = createOptions({ ids });
-
-await scrapeTracks(options);

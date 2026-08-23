@@ -1,4 +1,4 @@
-import { checkResponse, defaultOptions, Options } from "@/util";
+import { checkResponse, Options } from "@/util";
 import { writeFile, mkdir } from "node:fs/promises";
 import { gunzipSync, gzipSync } from "node:zlib";
 
@@ -26,7 +26,7 @@ export async function getCdnUrl(id: number): Promise<string> {
   return (await res.json()).track.cdn;
 }
 
-export async function fetchTrack(id: number, options: Options=defaultOptions): Promise<TrackData> {
+export async function fetchTrack(id: number, options: Options): Promise<TrackData> {
   const cdnUrl = await getCdnUrl(id);
 
   const res = await fetch(cdnUrl);
@@ -53,7 +53,7 @@ export async function fetchTrack(id: number, options: Options=defaultOptions): P
   };
 }
 
-export async function writeTrackData(data: TrackData, options: Options=defaultOptions): Promise<void> {
+export async function writeTrackData(data: TrackData, options: Options): Promise<void> {
   await mkdir(options.path, { recursive: true });
   await writeFile(`${options.path}/${data.id}.json`, JSON.stringify(data));
 }

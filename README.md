@@ -17,3 +17,4 @@ npm install
 | script     | description    |
 | ---------- | -------------- |
 | `npm test` | runs the tests |
+| `npm run scrape` | runs the scraper, run `npm run scrape -- -h` for help |

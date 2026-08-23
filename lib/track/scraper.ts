@@ -19,7 +19,7 @@ export async function scrapeTracks(options: Options): Promise<void> {
     while (queue.length > 0) {
       const id = queue.shift();
       try {
-        const track = await fetchTrack(id!);
+        const track = await fetchTrack(id!, options);
         await writeTrackData(track, options);
       } catch (err) {
         failures.push(`${id} - ${err}`);

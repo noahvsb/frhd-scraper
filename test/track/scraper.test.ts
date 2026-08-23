@@ -1,7 +1,8 @@
 import { describe, expect, it, jest, beforeEach, afterEach } from '@jest/globals';
 import { scrapeTracks } from '@/track/scraper';
-import { createOptions, rangeArray } from '@/util';
+import { rangeArray } from '@/util';
 import { readFile, rm } from 'node:fs/promises';
+import { createOptions } from '../test-utils';
 
 describe('scrapeTracks', () => {
   const mockCdnUrl = (id: number) => `https://cdn.example.com/track/${id}.js`;

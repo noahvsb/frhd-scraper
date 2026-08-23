@@ -16,20 +16,6 @@ export type Options = {
   ids: IdsOption,
 };
 
-export const createOptions = ({
-  compress = true,
-  path = 'data',
-  progressBar = true,
-  ids = 'cc',
-}: Partial<Options> = {}): Options => ({
-  compress,
-  path,
-  progressBar,
-  ids,
-});
-
-export const defaultOptions = createOptions();
-
 export function rangeArray(start: number, end: number) {
   const arr = [];
   for (let i = start; i <= end; i++) arr.push(i);
