@@ -50,7 +50,7 @@ export async function scrapeTracks(options: Options): Promise<void> {
     console.error(`Failure to scrape ${failures.length} track${plural1(failures.length)}:`);
     for (const failure of failures) {
       if (failure.err.includes('404')) notFoundCount++;
-      else console.error(`${failure.id} - ${failure.err}`);
+      else console.error(`id = ${failure.id} - ${failure.err}`);
     }
     if (notFoundCount > 0) console.error(`${notFoundCount} track${plural1(notFoundCount)} ${plural2(notFoundCount)} not found`);
   }

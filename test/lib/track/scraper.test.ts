@@ -101,7 +101,7 @@ describe('scrapeTracks', () => {
     expect(readFile('test/scraper-data/3.json', 'utf-8')).resolves.toBeTruthy();
 
     expect(consoleErrorSpy).toHaveBeenCalledWith('Failure to scrape 1 track:');
-    expect(consoleErrorSpy).toHaveBeenCalledWith('2 - Error: 500 Internal Server Error');
+    expect(consoleErrorSpy).toHaveBeenCalledWith('id = 2 - Error: 500 Internal Server Error');
   });
 
   it('1 failure, 1 not found', async () => {
@@ -115,7 +115,7 @@ describe('scrapeTracks', () => {
       .map((call) => call[0])
       .filter((line) => typeof line === 'string' && line.startsWith('1 -') || (line as string)?.startsWith('3 -'));
 
-    expect(consoleErrorSpy).toHaveBeenCalledWith('1 - Error: 500 Internal Server Error');
+    expect(consoleErrorSpy).toHaveBeenCalledWith('id = 1 - Error: 500 Internal Server Error');
     expect(consoleErrorSpy).toHaveBeenCalledWith('1 track was not found');
   });
 
