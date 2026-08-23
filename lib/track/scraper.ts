@@ -43,7 +43,7 @@ export async function scrapeTracks(options: Options): Promise<void> {
   bar?.stop();
 
   const elapsedSeconds = ((performance.now() - startTime) / 1000).toFixed(2);
-  console.log(`Scraped ${ids.length} track${plural1(ids.length)} in ${elapsedSeconds}s`);
+  console.log(`Scraping took ${elapsedSeconds}s`);
 
   if (failures.length > 0) {
     let notFoundCount = 0;
