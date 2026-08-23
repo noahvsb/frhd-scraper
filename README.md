@@ -8,13 +8,16 @@ https://freeriderhd.com hasn't been updated since 2018, modders and trackmakers 
 
 ## install
 
+###### I'm using `bun`, because `npm` is ass (see https://bun.sh/get for installation).
+
+Run the following command to install the packages:
 ```sh
-npm install
+bun i
 ```
 
 ## scripts
 
-| script     | description    |
-| ---------- | -------------- |
-| `npm test` | runs the tests |
-| `npm run scrape` | runs the scraper, run `npm run scrape -- -h` for help |
+| script       | description                                        |
+| ------------ | -------------------------------------------------- |
+| `bun test`   | runs the tests                                     |
+| `bun scrape` | runs the scraper, run `bun scrape --help` for help |

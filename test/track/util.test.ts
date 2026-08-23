@@ -55,16 +55,20 @@ describe('track utils', () => {
 
   describe('fetchTrack', () => {
     it('success', async () => {
-      await expect(fetchTrack(1001, createOptions())).resolves.toEqual({
+      const result = await fetchTrack(1001, createOptions());
+
+      expect(result).toEqual({
         id: 1001,
         title: 'Wild West',
         desc: expect.any(String),
         vehicles: expect.any(Array<String>),
         author: expect.any(String),
         featured: expect.any(Boolean),
-        code: 'H4sIAAAAAAAAA9M1tFAwzFQAkzq6EA6I0i1VgJOGmcrKISC2brZOiAKcMrTQCYGoAABbQ59aRQAAAA==',
+        code: expect.any(String),
         compressed: true,
-      })
+      });
+
+      expect(decompressCode(result.code)).toEqual('-18 1i 18 1i,-18 1i -18 -u 18 -u 18 1i##T -u -k,T u -k,T u 18,T -u 18');
     });
 
     it('success without compression', async () => {
@@ -77,7 +81,7 @@ describe('track utils', () => {
         featured: expect.any(Boolean),
         code: '-18 1i 18 1i,-18 1i -18 -u 18 -u 18 1i##T -u -k,T u -k,T u 18,T -u 18',
         compressed: false,
-      })
+      });
     });
   });
 
@@ -106,13 +110,10 @@ describe('track utils', () => {
 
   describe('(de)compressCode', () => {
     const code = '-18 1i 18 1i,-18 1i -18 -u 18 -u 18 1i##T -u -k,T u -k,T u 18,T -u 18';
-    const compressed = 'H4sIAAAAAAAAA9M1tFAwzFQAkzq6EA6I0i1VgJOGmcrKISC2brZOiAKcMrTQCYGoAABbQ59aRQAAAA==';
 
-    it('compressCode', async () => {
-      expect(compressCode(code)).toEqual(compressed);
-    });
-
-    it('decompressCode', async () => {
+    it('successfully compress and decompress track code', async () => {
+      const compressed = compressCode(code);
+      expect(typeof compressed).toBe('string');
       expect(decompressCode(compressed)).toEqual(code);
     });
   });

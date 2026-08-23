@@ -1,6 +1,7 @@
 import { describe, expect, it, jest } from '@jest/globals';
+import mockYargs from './__mocks__/yargs';
 
-jest.mock('yargs');
+jest.mock('yargs', () => ({ default: mockYargs }));
 jest.mock('yargs/helpers', () => ({ hideBin: (argv: string[]) => argv.slice(2) }));
 
 import { processArguments } from '@/args';
