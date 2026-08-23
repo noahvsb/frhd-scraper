@@ -91,12 +91,12 @@ describe('scrapeTracks', () => {
 
     await scrapeTracks(options);
 
-    await expect(readFile('test/scraper-data/1.json', 'utf-8')).resolves.toBeTruthy();
-    await expect(readFile('test/scraper-data/2.json', 'utf-8')).rejects.toThrow();
-    await expect(readFile('test/scraper-data/3.json', 'utf-8')).resolves.toBeTruthy();
+    expect(readFile('test/scraper-data/1.json', 'utf-8')).resolves.toBeTruthy();
+    expect(readFile('test/scraper-data/2.json', 'utf-8')).rejects.toThrow();
+    expect(readFile('test/scraper-data/3.json', 'utf-8')).resolves.toBeTruthy();
 
-    expect(consoleErrorSpy).toHaveBeenCalledWith('Failure to scrape these tracks:');
-    expect(consoleErrorSpy).toHaveBeenCalledWith(expect.stringContaining('2 - '));
+    expect(consoleErrorSpy).toHaveBeenCalledWith('Failure to scrape 1 track:');
+    expect(consoleErrorSpy).toHaveBeenCalledWith('2 - Error: 500 Internal Server Error');
   });
 
   it('1 success, 2 failures', async () => {

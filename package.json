@@ -18,7 +18,7 @@
   "type": "module",
   "main": "index.ts",
   "scripts": {
-    "scrape": "tsx index.ts"
+    "scrape": "bun index.ts"
   },
   "devDependencies": {
     "@types/cli-progress": "^3.11.6",

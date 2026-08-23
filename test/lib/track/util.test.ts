@@ -68,7 +68,7 @@ describe('track utils', () => {
         compressed: true,
       });
 
-      expect(decompressCode(result.code)).toEqual('-18 1i 18 1i,-18 1i -18 -u 18 -u 18 1i##T -u -k,T u -k,T u 18,T -u 18');
+      expect(decompressCode(result.code)).resolves.toEqual('-18 1i 18 1i,-18 1i -18 -u 18 -u 18 1i##T -u -k,T u -k,T u 18,T -u 18');
     });
 
     it('success without compression', async () => {
@@ -116,9 +116,9 @@ describe('track utils', () => {
     const code = '-18 1i 18 1i,-18 1i -18 -u 18 -u 18 1i##T -u -k,T u -k,T u 18,T -u 18';
 
     it('successfully compress and decompress track code', async () => {
-      const compressed = compressCode(code);
+      const compressed = await compressCode(code);
       expect(typeof compressed).toBe('string');
-      expect(decompressCode(compressed)).toEqual(code);
+      expect(decompressCode(compressed)).resolves.toEqual(code);
     });
   });
 });

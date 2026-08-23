@@ -9,13 +9,13 @@ describe('utils', () => {
     const unsuccessfulResponse: any = {
       ok: false,
       status: 404,
-      statusText: 'not found',
+      statusText: 'Not Found',
     }
     it('don\'t throw on successful response', () => {
       expect(() => checkResponse(successfulResponse)).not.toThrow();
     });
     it('throw on unsuccessful response', () => {
-      expect(() => checkResponse(unsuccessfulResponse)).toThrow('404: not found');
+      expect(() => checkResponse(unsuccessfulResponse)).toThrow('404 Not Found');
     });
   });
 
