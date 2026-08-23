@@ -14,6 +14,6 @@ npm install
 
 ## scripts
 
-```sh
-npm test  -  runs the tests
-```
+| script     | description    |
+| ---------- | -------------- |
+| `npm test` | runs the tests |
