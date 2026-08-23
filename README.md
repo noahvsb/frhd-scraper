@@ -24,6 +24,8 @@ bun i
 
 ## estimate of runtime and data size
 
+###### If anyone actually ran it, let me know so I can update these.
+
 ### track
 
 I scraped all community classics, which is about 10000 tracks. They took 475 seconds scrape and it's 300 MB of files. Currently there are almost 1 million tracks, so if we multiple both numbers by 100, we get a rough estimate of the total runtime and data size:

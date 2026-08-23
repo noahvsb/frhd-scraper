@@ -5,7 +5,7 @@ import { mkdir } from "node:fs/promises";
 
 type Failure = {
   id: number,
-  err: unknown,
+  err: string,
 }
 
 export async function scrapeTracks(options: Options): Promise<void> {
@@ -32,7 +32,7 @@ export async function scrapeTracks(options: Options): Promise<void> {
         const track = await fetchTrack(id!, options);
         await writeTrackData(track, options);
       } catch (err) {
-        failures.push({ id, err });
+        failures.push({ id, err: String(err) });
       }
       bar?.increment();
     }
@@ -43,17 +43,25 @@ export async function scrapeTracks(options: Options): Promise<void> {
   bar?.stop();
 
   const elapsedSeconds = ((performance.now() - startTime) / 1000).toFixed(2);
-  console.log(`Scraped ${ids.length} track${plural(ids.length)} in ${elapsedSeconds}s`);
+  console.log(`Scraped ${ids.length} track${plural1(ids.length)} in ${elapsedSeconds}s`);
 
   if (failures.length > 0) {
-    console.error(`Failure to scrape ${failures.length} track${plural(failures.length)}:`);
+    let notFoundCount = 0;
+    console.error(`Failure to scrape ${failures.length} track${plural1(failures.length)}:`);
     for (const failure of failures) {
-      console.error(`${failure.id} - ${failure.err}`);
+      if (failure.err.includes('404')) notFoundCount++;
+      else console.error(`${failure.id} - ${failure.err}`);
     }
+    if (notFoundCount > 0) console.error(`${notFoundCount} track${plural1(notFoundCount)} ${plural2(notFoundCount)} not found`);
   }
 }
 
-function plural(n: number): string {
+function plural1(n: number): string {
   if (n === 1) return '';
   return 's';
+}
+
+function plural2(n: number): string {
+  if (n === 1) return 'was';
+  return 'were';
 }

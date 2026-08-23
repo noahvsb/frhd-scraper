@@ -21,7 +21,7 @@ describe('scrapeTracks', () => {
     return {
       ok: init.ok ?? true,
       status: init.status ?? 200,
-        statusText: init.ok ? 'OK' : 'Internal Server Error',
+        statusText: init.ok ? 'OK' : init.status === 500 ? 'Internal Server Error' : 'Not Found',
       json: async () => (init.json ? init.json() : undefined),
       text: async () => (init.text ? init.text() : ''),
     } as unknown as Response;
@@ -30,9 +30,11 @@ describe('scrapeTracks', () => {
   let fetchSpy: Mock<typeof fetch>;
   let consoleErrorSpy: Mock<typeof console.error>;
   let failingIds: Set<number>;
+  let notFoundIds: Set<number>;
 
   beforeEach(() => {
     failingIds = new Set();
+    notFoundIds = new Set();
 
     fetchSpy = spyOn(global, 'fetch').mockImplementation(<typeof fetch> (async (input) => {
       const url = input.toString();
@@ -42,6 +44,9 @@ describe('scrapeTracks', () => {
         const id = Number(trackMatch[1]);
         if (failingIds.has(id)) {
           return makeResponse({ ok: false, status: 500 });
+        }
+        if (notFoundIds.has(id)) {
+          return makeResponse({ ok: false, status: 404 });
         }
         return makeResponse({ json: () => ({ track: { cdn: mockCdnUrl(id) } }) });
       }
@@ -85,7 +90,7 @@ describe('scrapeTracks', () => {
     expect(consoleErrorSpy).not.toHaveBeenCalled();
   });
 
-  it('2 successes, 1 failure', async () => {
+  it('1 failure', async () => {
     failingIds.add(2);
     const options = createOptions({ ids: { start: 1, end: 3 }, path: 'test/scraper-data' });
 
@@ -99,9 +104,9 @@ describe('scrapeTracks', () => {
     expect(consoleErrorSpy).toHaveBeenCalledWith('2 - Error: 500 Internal Server Error');
   });
 
-  it('1 success, 2 failures', async () => {
+  it('1 failure, 1 not found', async () => {
     failingIds.add(1);
-    failingIds.add(3);
+    notFoundIds.add(3);
     const options = createOptions({ ids: { start: 1, end: 3 }, path: 'test/scraper-data' });
 
     await scrapeTracks(options);
@@ -110,8 +115,22 @@ describe('scrapeTracks', () => {
       .map((call) => call[0])
       .filter((line) => typeof line === 'string' && line.startsWith('1 -') || (line as string)?.startsWith('3 -'));
 
-    expect(consoleErrorSpy).toHaveBeenCalledWith(expect.stringContaining('1 - '));
-    expect(consoleErrorSpy).toHaveBeenCalledWith(expect.stringContaining('3 - '));
+    expect(consoleErrorSpy).toHaveBeenCalledWith('1 - Error: 500 Internal Server Error');
+    expect(consoleErrorSpy).toHaveBeenCalledWith('1 track was not found');
+  });
+
+  it('2 not found', async () => {
+    notFoundIds.add(1);
+    notFoundIds.add(3);
+    const options = createOptions({ ids: { start: 1, end: 3 }, path: 'test/scraper-data' });
+
+    await scrapeTracks(options);
+
+    const failureLines = consoleErrorSpy.mock.calls
+      .map((call) => call[0])
+      .filter((line) => typeof line === 'string' && line.startsWith('1 -') || (line as string)?.startsWith('3 -'));
+
+    expect(consoleErrorSpy).toHaveBeenCalledWith('2 tracks were not found');
   });
 
   it('no progress bar for coverage', async () => {
