@@ -4,7 +4,7 @@ export const createOptions = ({
   compress = true,
   path = 'data',
   progressBar = true,
-  ids = 'cc',
+  ids = [],
 }: Partial<Options> = {}): Options => ({
   compress,
   path,

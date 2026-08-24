@@ -1,7 +1,11 @@
 import { describe, expect, it, mock } from 'bun:test';
 import { processArguments } from '@/args';
+import { rangeArray } from '@/util';
 
 describe('args', () => {
+  const ccIds = rangeArray(1001, 11106);
+  const allIds = [...ccIds, ...rangeArray(50001, 1100000)];
+
   function runArgs(...args: string[]) {
     return processArguments(['node', 'scraper', ...args]);
   }
@@ -26,7 +30,7 @@ describe('args', () => {
         compress: true,
         path: 'data/track',
         progressBar: true,
-        ids: 'all',
+        ids: allIds,
       });
     });
 
@@ -53,22 +57,22 @@ describe('args', () => {
     describe('--ids', () => {
       it('parses "cc"', () => {
         const { options } = runArgs('track', '--ids', 'cc');
-        expect(options.ids).toBe('cc');
+        expect(options.ids).toEqual(ccIds);
       });
 
       it('parses "all"', () => {
         const { options } = runArgs('track', '--ids', 'all');
-        expect(options.ids).toBe('all');
+        expect(options.ids).toEqual(allIds);
       });
 
-      it('parses range string format "1001..1010"', () => {
-        const { options } = runArgs('track', '--ids', '1001..1010');
-        expect(options.ids).toEqual({ start: 1001, end: 1010 });
+      it('parses range string', () => {
+        const { options } = runArgs('track', '--ids', '1001-1005');
+        expect(options.ids).toEqual([1001, 1002, 1003, 1004, 1005]);
       });
 
-      it('parses range string format "1001-1010"', () => {
-        const { options } = runArgs('track', '--ids', '1001-1010');
-        expect(options.ids).toEqual({ start: 1001, end: 1010 });
+      it('parses list of numbers', () => {
+        const { options } = runArgs('track', '--ids', '1001,1003,1005');
+        expect(options.ids).toEqual([1001, 1003, 1005]);
       });
 
       it('throws error on invalid ids value', () => {

@@ -1,6 +1,6 @@
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
-import { IdsOption, Options } from '@/util';
+import { getIds, Options, rangeArray } from '@/util';
 
 export interface ParsedArgs {
   command: string;
@@ -30,16 +30,21 @@ export function processArguments(args: string[] = process.argv): ParsedArgs {
     })
     .option('ids', {
       default: 'all',
-      description: 'Target IDs: \'cc\', \'all\', or range like \'1001..1010\' or \'1001-1010\'',
-      coerce: (val: string): IdsOption => {
-        if (val === 'cc' || val === 'all') return val;
+      description: 'Target IDs: \'cc\', \'all\', a range like \'1001-1010\' or a list of numbers like \'1001,1002,1003\'',
+      coerce: (val: string): number[] => {
+        if (val === 'cc' || val === 'all') return getIds(val);
 
         const parts = val.split(/[\.-]+/).map(Number);
         if (parts.length === 2 && !parts.some(isNaN)) {
-          return { start: parts[0], end: parts[1] };
+          return rangeArray(parts[0], parts[1]);
         }
 
-        throw new Error('Invalid --ids value. Expected \'cc\', \'all\', or a range like \'1001..1010\'.');
+        const ids = val.split(/[\,]+/).map(Number);
+        if (ids.length > 0 && !ids.some(isNaN)) {
+          return ids;
+        }
+
+        throw new Error('Invalid --ids value: expected \'cc\', \'all\', a range like \'1001-1010\' or a list of numbers like \'1001,1002,1003\'.');
       },
     })
     .demandCommand(1, 'Please provide a command: \'track\' or \'leaderboard\'')

@@ -26,8 +26,5 @@ describe('utils', () => {
     it('all', () => {
       expect(getIds('all')).toEqual([...rangeArray(1001, 11106), ...rangeArray(50001, 1100000)]);
     });
-    it('slice', () => {
-      expect(getIds({ start: 4, end: 8 })).toEqual(rangeArray(4, 8));
-    });
   })
 });

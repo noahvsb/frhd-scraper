@@ -9,15 +9,13 @@ type Failure = {
 }
 
 export async function scrapeTracks(options: Options): Promise<void> {
-  const ids = getIds(options.ids);
-
   await mkdir(options.path, { recursive: true });
 
   const bar = options.progressBar
     ? new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic)
     : undefined;
 
-  bar?.start(ids.length, 0);
+  bar?.start(options.ids.length, 0);
 
   const startTime = performance.now();
 
@@ -26,8 +24,8 @@ export async function scrapeTracks(options: Options): Promise<void> {
   const failures: Failure[] = [];
 
   async function worker() {
-    while (cursor < ids.length) {
-      const id = ids[cursor++];
+    while (cursor < options.ids.length) {
+      const id = options.ids[cursor++];
       try {
         const track = await fetchTrack(id!, options);
         await writeTrackData(track, options);

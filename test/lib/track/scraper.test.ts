@@ -72,7 +72,7 @@ describe('scrapeTracks', () => {
   });
 
   it('success', async () => {
-    const options = createOptions({ ids: { start: 1, end: 3 }, path: testPath });
+    const options = createOptions({ ids: [1,2,3], path: testPath });
 
     await scrapeTracks(options);
 
@@ -84,7 +84,7 @@ describe('scrapeTracks', () => {
   });
 
   it('success on empty list', async () => {
-    const options = createOptions({ ids: { start: 1, end: 0 }, path: testPath });
+    const options = createOptions({ ids: [], path: testPath });
 
     await scrapeTracks(options);
 
@@ -94,7 +94,7 @@ describe('scrapeTracks', () => {
 
   it('1 failure', async () => {
     failingIds.add(2);
-    const options = createOptions({ ids: { start: 1, end: 3 }, path: testPath });
+    const options = createOptions({ ids: [1,2,3], path: testPath });
 
     await scrapeTracks(options);
 
@@ -109,7 +109,7 @@ describe('scrapeTracks', () => {
   it('1 failure, 1 not found', async () => {
     failingIds.add(1);
     notFoundIds.add(3);
-    const options = createOptions({ ids: { start: 1, end: 3 }, path: testPath });
+    const options = createOptions({ ids: [1,2,3], path: testPath });
 
     await scrapeTracks(options);
 
@@ -120,7 +120,7 @@ describe('scrapeTracks', () => {
   it('2 not found', async () => {
     notFoundIds.add(1);
     notFoundIds.add(3);
-    const options = createOptions({ ids: { start: 1, end: 3 }, path: testPath });
+    const options = createOptions({ ids: [1,2,3], path: testPath });
 
     await scrapeTracks(options);
 
@@ -132,13 +132,13 @@ describe('scrapeTracks', () => {
   });
 
   it('no progress bar for coverage', async () => {
-    const options = createOptions({ ids: { start: 1, end: 3 }, path: testPath, progressBar: false });
+    const options = createOptions({ ids: [1,2,3], path: testPath, progressBar: false });
 
     await expect(scrapeTracks(options)).resolves.toBeUndefined();
   });
 
   it('larger queue than the concurrency limit (10 workers)', async () => {
-    const options = createOptions({ ids: { start: 1, end: 37 }, path: testPath });
+    const options = createOptions({ ids: rangeArray(1, 37), path: testPath });
 
     await scrapeTracks(options);
 
