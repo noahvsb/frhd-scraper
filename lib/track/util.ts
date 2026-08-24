@@ -13,6 +13,16 @@ const trackBody = (_id: number): RequestInit | undefined => ({
   },
 });
 
+export type TrackStats = {
+  upVotes: number,
+  downVotes: number,
+  plays: string,
+  runs: number,
+  firstRuns: number,
+  avgTime: string,
+  completionRate: number,
+}
+
 export type TrackData = {
   id: number,
   title: string,
@@ -22,16 +32,29 @@ export type TrackData = {
   featured: boolean,
   code: string,
   compressed: boolean,
+  trackStats: TrackStats,
 }
 
-export async function getCdnUrl(id: number): Promise<string> {
+export async function getCdnUrlAndTrackStats(id: number): Promise<{ cdnUrl: string, trackStats: TrackStats }> {
   const res = await fetch(trackUrl(id), trackBody(id));
   checkResponse(res);
-  return (await res.json()).track.cdn;
+  const data = await res.json();
+  return {
+    cdnUrl: data.track.cdn,
+    trackStats: {
+      upVotes: data.track_stats.up_votes,
+      downVotes: data.track_stats.dwn_votes,
+      plays: data.track_stats.plays,
+      runs: data.track_stats.runs,
+      firstRuns: data.track_stats.frst_runs,
+      avgTime: data.track_stats.avg_time,
+      completionRate: data.track_stats.cmpltn_rate,
+    },
+  };
 }
 
 export async function fetchTrack(id: number, options: Options): Promise<TrackData> {
-  const cdnUrl = await getCdnUrl(id);
+  const { cdnUrl, trackStats } = await getCdnUrlAndTrackStats(id);
 
   const res = await fetch(cdnUrl);
   checkResponse(res);
@@ -54,6 +77,7 @@ export async function fetchTrack(id: number, options: Options): Promise<TrackDat
     featured: data.featured ?? false,
     code: maybeCompressed,
     compressed: options.compress,
+    trackStats,
   };
 }
 

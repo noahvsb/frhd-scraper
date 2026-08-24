@@ -8,6 +8,20 @@ describe('scrapeTracks', () => {
   const testPath = 'test/data/track';
 
   const mockCdnUrl = (id: number) => `https://cdn.example.com/track/${id}.js`;
+  const mockAjaxJson = (id: number) => ({
+    track: {
+      cdn: mockCdnUrl(id),
+    },
+    track_stats: {
+      up_votes: 296,
+      dwn_votes: 72,
+      plays: '106.6k',
+      runs: 869,
+      frst_runs: 263,
+      avg_time: '25:37.40',
+      cmpltn_rate: 0.03
+    },
+  });
 
   const mockTrackJson = (id: number) => ({
     id,
@@ -50,7 +64,7 @@ describe('scrapeTracks', () => {
         if (notFoundIds.has(id)) {
           return makeResponse({ ok: false, status: 404 });
         }
-        return makeResponse({ json: () => ({ track: { cdn: mockCdnUrl(id) } }) });
+        return makeResponse({ json: () => mockAjaxJson(id) });
       }
 
       const cdnMatch = url.match(/\/track\/(\d+)\.js$/);
