@@ -20,8 +20,8 @@ export function processArguments(args: string[] = process.argv): ParsedArgs {
     .option('path', {
       alias: 'p',
       type: 'string',
-      default: 'data',
-      description: 'Custom relative path to cwd',
+      default: 'data/track',
+      description: 'Custom relative path to cwd (defaults to data/track/ or data/leaderboard/ depending on command)',
     })
     .option('progressBar', {
       type: 'boolean',
@@ -53,11 +53,13 @@ export function processArguments(args: string[] = process.argv): ParsedArgs {
     throw new Error('Leaderboard scraping is not implemented yet.');
   }
 
+  const defaultPath = command === 'leaderboard' ? 'data/leaderboard' : 'data/track';
+
   return {
     command,
     options: {
       compress: argv.compress,
-      path: argv.path,
+      path: argv.path ?? defaultPath,
       progressBar: argv.progressBar,
       ids: argv.ids,
     },

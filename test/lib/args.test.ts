@@ -24,7 +24,7 @@ describe('args', () => {
 
       expect(options).toEqual({
         compress: true,
-        path: 'data',
+        path: 'data/track',
         progressBar: true,
         ids: 'all',
       });

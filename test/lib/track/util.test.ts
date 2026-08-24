@@ -98,7 +98,7 @@ describe('track utils', () => {
     };
 
     it('writes mock track data', async () => {
-      const options = createOptions({ path: 'test/data' });
+      const options = createOptions({ path: 'test/data/track' });
 
       await mkdir(options.path, { recursive: true });
 
