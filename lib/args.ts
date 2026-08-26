@@ -54,11 +54,7 @@ export function processArguments(args: string[] = process.argv): ParsedArgs {
 
   const command = argv._[0] as string;
 
-  if (command === 'leaderboard') {
-    throw new Error('Leaderboard scraping is not implemented yet.');
-  }
-
-  const defaultPath = command === 'leaderboard' ? 'data/leaderboard' : 'data/track';
+  const defaultPath = command === 'track' ? 'data/track' : 'data/leaderboard';
 
   return {
     command,

@@ -12,13 +12,13 @@ describe('args', () => {
 
   describe('commands', () => {
     it('parses track command successfully', () => {
-      
       const result = runArgs('track');
       expect(result.command).toBe('track');
     });
 
-    it('leaderboard not yet implemented', () => {
-      expect(() => runArgs('leaderboard')).toThrow('Leaderboard scraping is not implemented yet.');
+    it('parses leaderboard comman successfully', () => {
+      const result = runArgs('leaderboard');
+      expect(result.command).toBe('leaderboard');
     });
   });
 

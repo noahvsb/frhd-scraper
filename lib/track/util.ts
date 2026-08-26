@@ -85,6 +85,11 @@ export async function writeTrackData(data: TrackData, options: Options): Promise
   await writeFile(`${options.path}/${data.id}.json`, JSON.stringify(data));
 }
 
+export async function scrapeTrack(id: number, options: Options): Promise<void> {
+  const track = await fetchTrack(id, options);
+  await writeTrackData(track, options);
+}
+
 export async function compressCode(code: string): Promise<string> {
   return (await gzipAsync(code)).toString('base64');
 }

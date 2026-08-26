@@ -1,8 +1,6 @@
 import { processArguments } from '@/args';
-import { scrapeTracks } from '@/track/scraper';
+import { scrape } from '@/scraper';
 
 const { command, options } = processArguments();
 
-if (command === 'track') {
-  await scrapeTracks(options);
-}
+await scrape(command, options);

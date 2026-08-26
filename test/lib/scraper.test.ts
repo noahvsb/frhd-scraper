@@ -1,10 +1,10 @@
 import { describe, expect, it, beforeEach, afterEach, spyOn, type Mock, mock } from 'bun:test';
 import { rangeArray } from '@/util';
 import { readFile, rm } from 'node:fs/promises';
-import { createOptions } from '../../test-utils';
-import { scrapeTracks } from '@/track/scraper';
+import { createOptions } from '../test-utils';
+import { scrape } from '@/scraper';
 
-describe('scrapeTracks', () => {
+describe('scrape', () => {
   const testPath = 'test/data/track';
 
   const mockCdnUrl = (id: number) => `https://cdn.example.com/track/${id}.js`;
@@ -88,7 +88,7 @@ describe('scrapeTracks', () => {
   it('success', async () => {
     const options = createOptions({ ids: [1,2,3], path: testPath });
 
-    await scrapeTracks(options);
+    await scrape('track', options);
 
     for (const id of [1, 2, 3]) {
       const written = JSON.parse(await readFile(`${testPath}/${id}.json`, 'utf-8'));
@@ -100,7 +100,7 @@ describe('scrapeTracks', () => {
   it('success on empty list', async () => {
     const options = createOptions({ ids: [], path: testPath });
 
-    await scrapeTracks(options);
+    await scrape('track', options);
 
     expect(fetchSpy).not.toHaveBeenCalled();
     expect(consoleErrorSpy).not.toHaveBeenCalled();
@@ -110,7 +110,7 @@ describe('scrapeTracks', () => {
     failingIds.add(2);
     const options = createOptions({ ids: [1,2,3], path: testPath });
 
-    await scrapeTracks(options);
+    await scrape('track', options);
 
     expect(readFile(`${testPath}/1.json`, 'utf-8')).resolves.toBeTruthy();
     expect(readFile(`${testPath}/2.json`, 'utf-8')).rejects.toThrow();
@@ -125,7 +125,7 @@ describe('scrapeTracks', () => {
     notFoundIds.add(3);
     const options = createOptions({ ids: [1,2,3], path: testPath });
 
-    await scrapeTracks(options);
+    await scrape('track', options);
 
     expect(consoleErrorSpy).toHaveBeenCalledWith('id = 1 - Error: 500 Internal Server Error');
     expect(consoleErrorSpy).toHaveBeenCalledWith('1 track was not found');
@@ -136,7 +136,7 @@ describe('scrapeTracks', () => {
     notFoundIds.add(3);
     const options = createOptions({ ids: [1,2,3], path: testPath });
 
-    await scrapeTracks(options);
+    await scrape('track', options);
 
     const failureLines = consoleErrorSpy.mock.calls
       .map((call) => call[0])
@@ -148,13 +148,13 @@ describe('scrapeTracks', () => {
   it('no progress bar for coverage', async () => {
     const options = createOptions({ ids: [1,2,3], path: testPath, progressBar: false });
 
-    await expect(scrapeTracks(options)).resolves.toBeUndefined();
+    expect(scrape('track', options)).resolves.toBeUndefined();
   });
 
   it('larger queue than the concurrency limit (10 workers)', async () => {
     const options = createOptions({ ids: rangeArray(1, 37), path: testPath });
 
-    await scrapeTracks(options);
+    await scrape('track', options);
 
     for (const id of rangeArray(1, 37)) {
       const written = JSON.parse(await readFile(`${testPath}/${id}.json`, 'utf-8'));

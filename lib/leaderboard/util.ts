@@ -1,4 +1,4 @@
-import { checkResponse } from "@/util";
+import { checkResponse, Options } from "@/util";
 
 const leaderbordUrl = (_id: number): string => `https://www.freeriderhd.com/track_api/load_leaderboard`;
 const leaderbordBody = (id: number): RequestInit => ({
@@ -9,11 +9,11 @@ const leaderbordBody = (id: number): RequestInit => ({
   body: `t_id=${id}`
 });
 
-type LeaderboardDate = {
+type LeaderboardData = {
   // TODO
 }
 
-export async function fetchLeaderboard(id: number): Promise<LeaderboardDate> {
+export async function fetchLeaderboard(id: number): Promise<LeaderboardData> {
   const res = await fetch(leaderbordUrl(id), leaderbordBody(id));
   checkResponse(res);
 
@@ -24,4 +24,8 @@ export async function fetchLeaderboard(id: number): Promise<LeaderboardDate> {
   console.log(data);
 
   return {};
+}
+
+export async function scrapeLeaderboard(id: number, options: Options): Promise<void> {
+  // TODO
 }

@@ -1,14 +1,16 @@
-import { getIds, Options } from "@/util";
-import { fetchTrack, writeTrackData } from "@/track/util";
+import { Options } from "@/util";
+import { scrapeTrack } from "@/track/util";
 import cliProgress from "cli-progress";
 import { mkdir } from "node:fs/promises";
+import { scrapeLeaderboard } from "./leaderboard/util";
 
 type Failure = {
   id: number,
   err: string,
 }
 
-export async function scrapeTracks(options: Options): Promise<void> {
+
+export async function scrape(command: string, options: Options): Promise<void> {
   await mkdir(options.path, { recursive: true });
 
   const bar = options.progressBar
@@ -27,8 +29,8 @@ export async function scrapeTracks(options: Options): Promise<void> {
     while (cursor < options.ids.length) {
       const id = options.ids[cursor++];
       try {
-        const track = await fetchTrack(id!, options);
-        await writeTrackData(track, options);
+        if (command === 'track') await scrapeTrack(id!, options);
+        else await scrapeLeaderboard(id!, options);
       } catch (err) {
         failures.push({ id, err: String(err) });
       }
@@ -45,7 +47,7 @@ export async function scrapeTracks(options: Options): Promise<void> {
 
   if (failures.length > 0) {
     let notFoundCount = 0;
-    console.error(`Failure to scrape ${failures.length} track${plural1(failures.length)}:`);
+    console.error(`Failure to scrape ${failures.length} ${command}${plural1(failures.length)}:`);
     for (const failure of failures) {
       if (failure.err.includes('404')) notFoundCount++;
       else console.error(`id = ${failure.id} - ${failure.err}`);
