@@ -3,6 +3,7 @@ import { rangeArray } from '@/util';
 import { readFile, rm } from 'node:fs/promises';
 import { createOptions } from '../test-utils';
 import { scrape } from '@/scraper';
+import { mockLeaderboardFetch, mockLeaderboardJson, mockRacesJson } from '../mocks/leaderboard';
 
 describe('scrape', () => {
   const testPath = 'test/data/track';
@@ -160,6 +161,18 @@ describe('scrape', () => {
       const written = JSON.parse(await readFile(`${testPath}/${id}.json`, 'utf-8'));
       expect(written.id).toEqual(id);
     }
+    expect(consoleErrorSpy).not.toHaveBeenCalled();
+  });
+
+  it('scrape leaderboard', async () => {
+    fetchSpy.mockImplementation(<typeof fetch> mockLeaderboardFetch);
+
+    const options = createOptions({ ids: [52143], path: testPath });
+
+    await scrape('leaderboard', options);
+
+    const written = JSON.parse(await readFile(`${testPath}/52143.json`, 'utf-8'));
+    expect(written).toMatchObject({ id: 52143, leaderboard: expect.any(Array) });
     expect(consoleErrorSpy).not.toHaveBeenCalled();
   });
 });
