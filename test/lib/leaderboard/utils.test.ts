@@ -3,7 +3,7 @@ import { fetchLeaderboard, getUsers, writeLeaderboardData } from '@/leaderboard/
 import { mkdir, readFile, rm } from 'node:fs/promises';
 import { createOptions } from '../../test-utils';
 import { decompressCode } from '@/util';
-import { compressedCode1, compressedCode2, mockLeaderboardFetch, mockLeaderboardJson, mockRacesJson, rawCode1, rawCode2 } from '../../mocks/leaderboard';
+import { compressedCode1, compressedCode2, mockLeaderboardFetch, rawCode1, rawCode2 } from '../../mocks/leaderboard';
 
 describe('leaderboard utils', () => {
   let fetchSpy: Mock<typeof fetch>;

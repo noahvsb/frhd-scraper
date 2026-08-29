@@ -9,11 +9,11 @@ const trackBody = (_id: number): RequestInit | undefined => ({
 });
 
 export type TrackStats = {
-  upVotes: number,
-  downVotes: number,
+  upVotes: string,
+  downVotes: string,
   plays: string,
   runs: number,
-  firstRuns: number,
+  firstRuns: string,
   avgTime: string,
   completionRate: number,
 }

@@ -3,7 +3,8 @@ import { rangeArray } from '@/util';
 import { readFile, rm } from 'node:fs/promises';
 import { createOptions } from '../test-utils';
 import { scrape } from '@/scraper';
-import { mockLeaderboardFetch, mockLeaderboardJson, mockRacesJson } from '../mocks/leaderboard';
+import { mockLeaderboardFetch } from '../mocks/leaderboard';
+import { makeResponse } from '../mocks/makeResponse';
 
 describe('scrape', () => {
   const testPath = 'test/data/track';
@@ -14,13 +15,13 @@ describe('scrape', () => {
       cdn: mockCdnUrl(id),
     },
     track_stats: {
-      up_votes: 296,
-      dwn_votes: 72,
-      plays: '106.6k',
-      runs: 869,
-      frst_runs: 263,
-      avg_time: '25:37.40',
-      cmpltn_rate: 0.03
+      up_votes: '23.0k',
+      dwn_votes: '3.7k',
+      plays: '45.4m',
+      runs: 8180695,
+      frst_runs: '5.0m',
+      avg_time: '67910:39.57',
+      cmpltn_rate: 0.92
     },
   });
 
@@ -33,16 +34,6 @@ describe('scrape', () => {
     featured: false,
     code: '-18 1i 18 1i,-18 1i -18 -u 18 -u 18 1i##T -u -k,T u -k,T u 18,T -u 18',
   });
-
-  function makeResponse(init: { ok?: boolean; status?: number; json?: () => any; text?: () => any }): Response {
-    return {
-      ok: init.ok ?? true,
-      status: init.status ?? 200,
-        statusText: init.ok ? 'OK' : init.status === 500 ? 'Internal Server Error' : 'Not Found',
-      json: async () => (init.json ? init.json() : undefined),
-      text: async () => (init.text ? init.text() : ''),
-    } as unknown as Response;
-  }
 
   let fetchSpy: Mock<typeof fetch>;
   let consoleErrorSpy: Mock<typeof console.error>;

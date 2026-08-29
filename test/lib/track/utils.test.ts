@@ -3,60 +3,13 @@ import { fetchTrack, getCdnUrlAndTrackStats, TrackData, writeTrackData } from '@
 import { mkdir, readFile, rm } from 'node:fs/promises';
 import { createOptions } from '../../test-utils';
 import { decompressCode } from '@/util';
+import { mockCdnUrl, mockTrackFetch } from '../../mocks/track';
 
 describe('track utils', () => {
-  const mockCdnUrl = 'https://cdn.freeriderhd.com/free_rider_hd/tracks/prd/b/8c/1001/track-data-v1.js';
-  const mockAjaxJson = {
-    track: {
-      cdn: mockCdnUrl,
-    },
-    track_stats: {
-      up_votes: 296,
-      dwn_votes: 72,
-      plays: '106.6k',
-      runs: 869,
-      frst_runs: 263,
-      avg_time: '25:37.40',
-      cmpltn_rate: 0.03
-    },
-  };
-
-  const mockTrackJson = {
-    id: 1001,
-    title: 'Wild West',
-    descr: 'Wild West is a Free Rider community classic track by weewam.',
-    vehicles: ['BMX', 'MTB'],
-    u_id: 1001,
-    author: 'weewam',
-    code: '-18 1i 18 1i,-18 1i -18 -u 18 -u 18 1i##T -u -k,T u -k,T u 18,T -u 18',
-  };
-
-  function makeResponse(init: { ok?: boolean; status?: number; statusText?: string, json?: () => any; text?: () => any }): Response {
-    return {
-      ok: init.ok ?? true,
-      status: init.status ?? 200,
-      statusText: init.ok ? 'OK' : 'Internal Server Error',
-      json: async () => (init.json ? init.json() : undefined),
-      text: async () => (init.text ? init.text() : ''),
-    } as unknown as Response;
-  }
-
   let fetchSpy: Mock<typeof fetch>;
 
   beforeEach(() => {
-    fetchSpy = spyOn(global, 'fetch').mockImplementation(<typeof fetch> (async (input) => {
-      const url = input.toString();
-
-      if (url.startsWith('https://www.freeriderhd.com/t/')) {
-        return makeResponse({ json: () => mockAjaxJson });
-      }
-
-      if (url === mockCdnUrl) {
-        return makeResponse({ text: () => `t(${JSON.stringify(mockTrackJson)})` });
-      }
-
-      throw new Error(`Unmocked fetch call: ${url}`);
-    }));
+    fetchSpy = spyOn(global, 'fetch').mockImplementation(<typeof fetch> mockTrackFetch);
   });
 
   afterAll(() => {
@@ -65,25 +18,25 @@ describe('track utils', () => {
 
   describe('getCdnUrlAndTrackStats', () => {
     it('success', async () => {
-      expect(getCdnUrlAndTrackStats(1001)).resolves.toEqual({ cdnUrl: mockCdnUrl, trackStats: {
-        upVotes: 296,
-        downVotes: 72,
-        plays: '106.6k',
-        runs: 869,
-        firstRuns: 263,
-        avgTime: '25:37.40',
-        completionRate: 0.03,
+      expect(getCdnUrlAndTrackStats(52143)).resolves.toEqual({ cdnUrl: mockCdnUrl, trackStats: {
+        upVotes: '23.0k',
+        downVotes: '3.7k',
+        plays: '45.4m',
+        runs: 8180695,
+        firstRuns: '5.0m',
+        avgTime: '67910:39.57',
+        completionRate: 0.92
       }});
     });
   });
 
   describe('fetchTrack', () => {
     it('success', async () => {
-      const result = await fetchTrack(1001, createOptions());
+      const result = await fetchTrack(52143, createOptions());
 
       expect(result).toEqual({
-        id: 1001,
-        title: 'Wild West',
+        id: 52143,
+        title: 'Strat\'s Intro',
         desc: expect.any(String),
         vehicles: expect.any(Array<String>),
         authorId: expect.any(Number),
@@ -98,9 +51,9 @@ describe('track utils', () => {
     });
 
     it('success without compression', async () => {
-      expect(fetchTrack(1001, createOptions({ compress: false }))).resolves.toEqual({
-        id: 1001,
-        title: 'Wild West',
+      expect(fetchTrack(52143, createOptions({ compress: false }))).resolves.toEqual({
+        id: 52143,
+        title: 'Strat\'s Intro',
         desc: expect.any(String),
         vehicles: expect.any(Array<String>),
         authorId: expect.any(Number),
