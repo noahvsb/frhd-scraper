@@ -158,11 +158,11 @@ describe('scrape', () => {
   it('scrape leaderboard', async () => {
     fetchSpy.mockImplementation(<typeof fetch> mockLeaderboardFetch);
 
-    const options = createOptions({ ids: [52143], path: testPath });
+    const options = createOptions({ ids: [52143], path: 'test/data/leaderboard' });
 
     await scrape('leaderboard', options);
 
-    const written = JSON.parse(await readFile(`${testPath}/52143.json`, 'utf-8'));
+    const written = JSON.parse(await readFile(`${options.path}/52143.json`, 'utf-8'));
     expect(written).toMatchObject({ id: 52143, leaderboard: expect.any(Array) });
     expect(consoleErrorSpy).not.toHaveBeenCalled();
   });

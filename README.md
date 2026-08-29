@@ -24,14 +24,17 @@ bun i
 
 ## estimate of runtime and data size
 
-###### If anyone actually ran it, let me know so I can update these.
+I scraped all community classics on a pretty good laptop with a wireless connection:
 
-### track
+| command       | runtime | data size |
+| ------------- | ------- | --------- |
+| `track`       |  236.0s |  303.3 MB |
+| `leaderboard` |  254.4s |   58.6 MB |
 
-I scraped all community classics, which is about 10000 tracks. They took 475 seconds scrape and it's 300 MB of files. Currently there are almost 1 million tracks, so if we multiple both numbers by 100, we get a rough estimate of the total runtime and data size:
+There are about 10000 community classics and in total there are around 1 million tracks, so this gives the following estimates:
 
-**13 hours** and **30 GB**
+| command       | runtime | data size |
+| ------------- | ------- | --------- |
+| `track`       |    6.5h |  30.33 GB |
+| `leaderboard` |      7h |   5.86 GB |
 
-### leaderboard
-
-Not yet implemented, but only 1 fetch is necessary, so I believe the runtime will be lower. For the data size I believe it will be about the same magnitude.

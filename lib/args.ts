@@ -1,7 +1,6 @@
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 import { getIds, Options, rangeArray } from '@/util';
-import { stringify } from 'node:querystring';
 
 export interface ParsedArgs {
   command: string;
@@ -21,7 +20,6 @@ export function processArguments(args: string[] = process.argv): ParsedArgs {
     .option('path', {
       alias: 'p',
       type: 'string',
-      default: 'data/track',
       description: 'Custom relative path to cwd (defaults to data/track/ or data/leaderboard/ depending on command)',
     })
     .option('progressBar', {
