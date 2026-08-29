@@ -1,6 +1,7 @@
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 import { getIds, Options, rangeArray } from '@/util';
+import { stringify } from 'node:querystring';
 
 export interface ParsedArgs {
   command: string;
@@ -29,6 +30,7 @@ export function processArguments(args: string[] = process.argv): ParsedArgs {
       description: 'Show progress bar (use --no-progressBar to disable)',
     })
     .option('ids', {
+      type: 'string',
       default: 'all',
       description: 'Target IDs: \'cc\', \'all\', a range like \'1001-1010\' or a list of numbers like \'1001,1002,1003\'',
       coerce: (val: string): number[] => {

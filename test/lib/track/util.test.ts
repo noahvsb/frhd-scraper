@@ -1,7 +1,8 @@
 import { afterAll, beforeEach, describe, expect, it, spyOn, type Mock } from 'bun:test';
-import { compressCode, decompressCode, fetchTrack, getCdnUrlAndTrackStats, TrackData, writeTrackData } from '@/track/util';
+import { fetchTrack, getCdnUrlAndTrackStats, TrackData, writeTrackData } from '@/track/util';
 import { mkdir, readFile, rm } from 'node:fs/promises';
 import { createOptions } from '../../test-utils';
+import { decompressCode } from '@/util';
 
 describe('track utils', () => {
   const mockCdnUrl = 'https://cdn.freeriderhd.com/free_rider_hd/tracks/prd/b/8c/1001/track-data-v1.js';
@@ -25,6 +26,7 @@ describe('track utils', () => {
     title: 'Wild West',
     descr: 'Wild West is a Free Rider community classic track by weewam.',
     vehicles: ['BMX', 'MTB'],
+    u_id: 1001,
     author: 'weewam',
     code: '-18 1i 18 1i,-18 1i -18 -u 18 -u 18 1i##T -u -k,T u -k,T u 18,T -u 18',
   };
@@ -84,6 +86,7 @@ describe('track utils', () => {
         title: 'Wild West',
         desc: expect.any(String),
         vehicles: expect.any(Array<String>),
+        authorId: expect.any(Number),
         author: expect.any(String),
         featured: expect.any(Boolean),
         code: expect.any(String),
@@ -100,6 +103,7 @@ describe('track utils', () => {
         title: 'Wild West',
         desc: expect.any(String),
         vehicles: expect.any(Array<String>),
+        authorId: expect.any(Number),
         author: expect.any(String),
         featured: expect.any(Boolean),
         code: '-18 1i 18 1i,-18 1i -18 -u 18 -u 18 1i##T -u -k,T u -k,T u 18,T -u 18',
@@ -115,6 +119,7 @@ describe('track utils', () => {
       title: 'mock title',
       desc: 'mock desc',
       vehicles: ['BMX'],
+      authorId: 0,
       author: 'mock author',
       featured: true,
       code: 'H4sIAAAAAAAAA9M1tFAwzFQAkzq6EA6I0i1VgJOGmcrKISC2brZOiAKcMrTQCYGoAABbQ59aRQAAAA==',
@@ -134,16 +139,6 @@ describe('track utils', () => {
 
       // clean up
       await rm(options.path, { recursive: true });
-    });
-  });
-
-  describe('(de)compressCode', () => {
-    const code = '-18 1i 18 1i,-18 1i -18 -u 18 -u 18 1i##T -u -k,T u -k,T u 18,T -u 18';
-
-    it('successfully compress and decompress track code', async () => {
-      const compressed = await compressCode(code);
-      expect(typeof compressed).toBe('string');
-      expect(decompressCode(compressed)).resolves.toEqual(code);
     });
   });
 });

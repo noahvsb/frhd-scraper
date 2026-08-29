@@ -1,4 +1,4 @@
-import { checkResponse, getIds, rangeArray } from '@/util';
+import { checkResponse, compressCode, decompressCode, getIds, rangeArray } from '@/util';
 import { describe, expect, it } from 'bun:test';
 
 describe('utils', () => {
@@ -26,5 +26,16 @@ describe('utils', () => {
     it('all', () => {
       expect(getIds('all')).toEqual([...rangeArray(1001, 11106), ...rangeArray(50001, 1100000)]);
     });
-  })
+  });
+
+
+  describe('(de)compressCode', () => {
+    const code = '-18 1i 18 1i,-18 1i -18 -u 18 -u 18 1i##T -u -k,T u -k,T u 18,T -u 18';
+
+    it('successfully compress and decompress track code', async () => {
+      const compressed = await compressCode(code);
+      expect(typeof compressed).toBe('string');
+      expect(decompressCode(compressed)).resolves.toEqual(code);
+    });
+  });
 });

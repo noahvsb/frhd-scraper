@@ -1,10 +1,5 @@
-import { checkResponse, Options } from "@/util";
+import { checkResponse, compressCode, Options } from "@/util";
 import { writeFile } from "node:fs/promises";
-import { promisify } from "node:util";
-import { gunzip, gzip } from "node:zlib";
-
-const gzipAsync = promisify(gzip);
-const gunzipAsync = promisify(gunzip);
 
 const trackUrl = (id: number): string => `https://www.freeriderhd.com/t/${id}?ajax=true`;
 const trackBody = (_id: number): RequestInit | undefined => ({
@@ -28,11 +23,12 @@ export type TrackData = {
   title: string,
   desc: string,
   vehicles: string[],
+  authorId: number,
   author: string,
   featured: boolean,
+  trackStats: TrackStats,
   code: string,
   compressed: boolean,
-  trackStats: TrackStats,
 }
 
 export async function getCdnUrlAndTrackStats(id: number): Promise<{ cdnUrl: string, trackStats: TrackStats }> {
@@ -73,11 +69,12 @@ export async function fetchTrack(id: number, options: Options): Promise<TrackDat
     title: data.title,
     desc: data.descr,
     vehicles: data.vehicles,
+    authorId: data.u_id,
     author: data.author,
     featured: data.featured ?? false,
+    trackStats,
     code: maybeCompressed,
     compressed: options.compress,
-    trackStats,
   };
 }
 
@@ -88,12 +85,4 @@ export async function writeTrackData(data: TrackData, options: Options): Promise
 export async function scrapeTrack(id: number, options: Options): Promise<void> {
   const track = await fetchTrack(id, options);
   await writeTrackData(track, options);
-}
-
-export async function compressCode(code: string): Promise<string> {
-  return (await gzipAsync(code)).toString('base64');
-}
-
-export async function decompressCode(compressed: string): Promise<string> {
-  return (await gunzipAsync(Buffer.from(compressed, 'base64'))).toString('utf-8');
 }
