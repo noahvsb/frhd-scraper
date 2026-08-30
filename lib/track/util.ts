@@ -1,4 +1,5 @@
 import { checkResponse, compressCode, Options } from "@/util";
+import { existsSync } from "node:fs";
 import { writeFile } from "node:fs/promises";
 
 const trackUrl = (id: number): string => `https://www.freeriderhd.com/t/${id}?ajax=true`;
@@ -83,6 +84,11 @@ export async function writeTrackData(data: TrackData, options: Options): Promise
 }
 
 export async function scrapeTrack(id: number, options: Options): Promise<void> {
+  const filePath = `${options.path}/${id}.json`;
+  if (existsSync(filePath)) {
+    throw new Error("Track skipped");
+  }
+
   const track = await fetchTrack(id, options);
   await writeTrackData(track, options);
 }

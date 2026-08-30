@@ -46,18 +46,21 @@ export async function scrape(command: string, options: Options): Promise<void> {
   console.log(`Scraping took ${elapsedSeconds}s`);
 
   if (failures.length > 0) {
+    let skippedCount = 0;
     let notFoundCount = 0;
-    console.error(`Failure to scrape ${failures.length} ${command}${plural1(failures.length)}:`);
+    console.log(`Did not scrape ${failures.length} ${command}${plural1(failures.length)}:`);
     for (const failure of failures) {
-      if (failure.err.includes('404') || failure.err.includes('not found')) notFoundCount++;
+      if (failure.err.includes('skipped')) skippedCount++;
+      else if (failure.err.includes('404') || failure.err.includes('not found')) notFoundCount++;
       else console.error(`id = ${failure.id} - ${failure.err}`);
     }
+    if (skippedCount > 0) console.log(`${skippedCount} track${plural1(skippedCount)} ${plural2(skippedCount)} skipped`);
     if (notFoundCount > 0) console.error(notFoundMessage(notFoundCount, command));
   }
 }
 
 function notFoundMessage(notFoundCount: number, command: string) {
-  return `${notFoundCount} ${command}${plural1(notFoundCount)} ${plural2(notFoundCount)} not found${command === 'leaderboard' ? ' or empty' : ''}`
+  return `${notFoundCount} ${command}${plural1(notFoundCount)} ${plural2(notFoundCount)} not found${command === 'leaderboard' ? ' or empty' : ''}`;
 }
 
 function plural1(n: number): string {
