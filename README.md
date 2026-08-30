@@ -6,7 +6,15 @@ Scrapes all tracks and leaderboards from https://freeriderhd.com.
 
 https://freeriderhd.com hasn't been updated since 2018, modders and trackmakers have kept it alive with wonderful mods and beautiful tracks. But I fear it won't be long until the servers get shut down.
 
-## install
+## install and usage
+
+### windows
+
+I made it easier for windows users with a .bat script:
+
+Clone this repository or download the .zip and extract. Then double click the run-scraper.bat, it will warn you, but just run it.
+
+### install
 
 ###### I'm using `bun`, because `npm` is ass (see https://bun.sh/get for installation).
 
@@ -15,7 +23,7 @@ Run the following command to install the packages:
 bun i
 ```
 
-## scripts
+### scripts
 
 | script                   | description                            |
 | ------------------------ | -------------------------------------- |
