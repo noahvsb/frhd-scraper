@@ -76,19 +76,18 @@ type RaceEntry = {
 export async function getUsers(id: number): Promise<Map<number, UserData>> {
   const res = await fetch(leaderboardUrl(id), leaderboardBody(id));
   checkResponse(res);
-  const data = (await res.json()).track_leaderboard;
+  const data = (await res.json()).track_leaderboard.filter((entry: LeaderboardEntry) => entry.user);
+  if (data.length === 0) throw Error('Leaderboard not found or empty');
   return new Map(
-    data
-      .filter((entry: LeaderboardEntry) => entry.user)
-      .map((entry: LeaderboardEntry): [number, UserData] => [
-        entry.u_id,
-        {
-          id: entry.u_id,
-          name: entry.user.d_name,
-          place: entry.place,
-          time: entry.run_time,
-        },
-      ])
+    data.map((entry: LeaderboardEntry): [number, UserData] => [
+      entry.u_id,
+      {
+        id: entry.u_id,
+        name: entry.user.d_name,
+        place: entry.place,
+        time: entry.run_time,
+      },
+    ])
   );
 }
 

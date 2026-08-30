@@ -49,11 +49,15 @@ export async function scrape(command: string, options: Options): Promise<void> {
     let notFoundCount = 0;
     console.error(`Failure to scrape ${failures.length} ${command}${plural1(failures.length)}:`);
     for (const failure of failures) {
-      if (failure.err.includes('404')) notFoundCount++;
+      if (failure.err.includes('404') || failure.err.includes('not found')) notFoundCount++;
       else console.error(`id = ${failure.id} - ${failure.err}`);
     }
-    if (notFoundCount > 0) console.error(`${notFoundCount} track${plural1(notFoundCount)} ${plural2(notFoundCount)} not found`);
+    if (notFoundCount > 0) console.error(notFoundMessage(notFoundCount, command));
   }
+}
+
+function notFoundMessage(notFoundCount: number, command: string) {
+  return `${notFoundCount} ${command}${plural1(notFoundCount)} ${plural2(notFoundCount)} not found${command === 'leaderboard' ? ' or empty' : ''}`
 }
 
 function plural1(n: number): string {
