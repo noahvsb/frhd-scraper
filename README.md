@@ -17,10 +17,12 @@ bun i
 
 ## scripts
 
-| script       | description                                        |
-| ------------ | -------------------------------------------------- |
-| `bun test`   | runs the tests                                     |
-| `bun scrape` | runs the scraper, run `bun scrape --help` for help |
+| script                   | description                            |
+| ------------------------ | -------------------------------------- |
+| `bun test`               | runs the tests                         |
+| `bun scrape track`       | runs the track scraper                 |
+| `bun scrape leaderboard` | runs the leaderboard scraper           |
+| `bun scrape --help`      | prints the help message with more info |
 
 ## runtime and data size
 
