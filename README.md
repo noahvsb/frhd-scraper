@@ -12,7 +12,7 @@ https://freeriderhd.com hasn't been updated since 2018, modders and trackmakers 
 
 I made it easier for windows users with a .bat script:
 
-Clone this repository or download the .zip and extract. Then double click the run-scraper.bat, it will warn you, but just run it.
+Clone this repository or download the .zip and extract. Then double click `run-scraper.bat`, it will warn you, but just run it.
 
 ### install
 
